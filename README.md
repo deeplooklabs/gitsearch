@@ -1,18 +1,23 @@
-# GitSearch
+<h1 align="center">
+  <br>
+  <a href="https://deeplooklabs.com"><img src="static/banner.png" width="200px" alt="Gitsearch"></a>
+</h1>
+
+Searching github the way it worked...
 
 ## Config:
 
 Set enviroment GITHUB_TOKEN
 
 ```bash
-export GITHUB_TOKEN=XXX; python3 gitsearch.py SEARCH
+export GITHUB_TOKEN=XXX; gitsearch SEARCH
 ```
 
 ## How to search:
 
 > Search AWS keys on source python:
 ```bash
-python3 gitsearch.py "target.com env language:python"
+gitsearch "target.com env language:python"
 ```
 
 ## Todo:
