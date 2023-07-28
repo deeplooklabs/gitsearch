@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://deeplooklabs.com"><img src="static/banner.png" width="200px" alt="Gitsearch"></a>
+  <a href="https://deeplooklabs.com"><img src="static/banner.png" width="100%" alt="Gitsearch"></a>
 </h1>
 
 Searching github the way it worked...
