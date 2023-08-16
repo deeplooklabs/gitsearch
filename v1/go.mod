@@ -1,4 +1,4 @@
-module github.com/deeplooklabs/gitsearch
+module github.com/deeplooklabs/gitsearch/v1
 
 go 1.21.0
 
