@@ -17,9 +17,9 @@ export GITHUB_TOKEN=XXX; gitsearch SEARCH
 
 > Search AWS keys on source python:
 ```bash
-gitsearch "target.com env language:python"
+gitsearch "\"target\" \"AKIA\" boto language:python"
 ```
 
 ## Todo:
 
-- [ ] List per date 
+- [ ] Get 30+ Results 
