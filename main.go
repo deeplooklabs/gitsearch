@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 
@@ -36,7 +37,7 @@ func main() {
 		return
 	}
 
-	searchTerm := os.Args[1]
+	searchTerm := url.QueryEscape(os.Args[1])
 	accessToken := os.Getenv("GITHUB_TOKEN")
 	sortBy := "updated"
 	headers := map[string]string{"Authorization": "Token " + accessToken}
