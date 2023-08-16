@@ -5,9 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-
 	"strings"
-	//"time"
 
 	"github.com/tidwall/gjson"
 )
@@ -42,8 +40,6 @@ func main() {
 	accessToken := os.Getenv("GITHUB_TOKEN")
 	sortBy := "updated"
 	headers := map[string]string{"Authorization": "Token " + accessToken}
-	//dateNow := time.Now()
-	//yearNow := dateNow.Year()
 	url := fmt.Sprintf("https://api.github.com/search/code?q=%s&sort=%s", searchTerm, sortBy)
 	response, err := sendRequest(url, headers)
 	if err != nil {
