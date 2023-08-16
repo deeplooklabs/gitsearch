@@ -6,7 +6,7 @@
 Searching github the way it worked...
 ## Install
 
-`go install github.com/deeplooklabs/v1/cmd/gitsearch@latest`
+`go install github.com/deeplooklabs/gitsearch@latest`
 
 ## Config:
 

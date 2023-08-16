@@ -43,14 +43,14 @@ func main() {
 	url := fmt.Sprintf("https://api.github.com/search/code?q=%s&sort=%s", searchTerm, sortBy)
 	response, err := sendRequest(url, headers)
 	if err != nil {
-		fmt.Println("[WRN] An error occurred while making the request!")
+		fmt.Printf("[WRN] An error occurred while making the request! to %s", url)
 		return
 	}
 
 	defer response.Body.Close()
 
 	if response.StatusCode != 200 {
-		fmt.Println("[WRN] An error occurred while making the request!")
+		fmt.Printf("[WRN] An error occurred while making the request! {status_code: %d}", response.StatusCode)
 		return
 	}
 
