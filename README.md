@@ -4,6 +4,9 @@
 </h1>
 
 Searching github the way it worked...
+## Install
+
+`go install github.com/deeplooklabs/gitsearch@latest`
 
 ## Config:
 
