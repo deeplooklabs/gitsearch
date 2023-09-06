@@ -29,4 +29,4 @@ gitsearch "\"target\" \"AKIA\" boto language:python"
 
 ## Todo:
 
-- [ ] Get 30+ Results 
+- [x] Get 30+ Results 

@@ -6,7 +6,10 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"regexp"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/tidwall/gjson"
 )
@@ -37,6 +40,8 @@ func main() {
 		return
 	}
 
+	fmt.Println(banner)
+
 	searchTerm := url.QueryEscape(os.Args[1])
 	accessToken := os.Getenv("GITHUB_TOKEN")
 	sortBy := "updated"
@@ -55,23 +60,47 @@ func main() {
 		return
 	}
 
-	data, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		fmt.Println("[WRN] An error occurred while reading the response!")
-		return
-	}
+	re := regexp.MustCompile(`page=(\d+)[^>]*>; rel="last"`)
+	matches := re.FindStringSubmatch(response.Header.Get("Link"))
 
-	json := string(data[:])
+	if len(matches) == 2 {
+		lastPageStr := matches[1]
+		lastPage, err := strconv.Atoi(lastPageStr)
+		fmt.Printf("[INF] Total pages found: %d\n", lastPage)
 
-	fmt.Println(banner)
+		if err != nil {
+			fmt.Println("Error during conversion")
+			return
+		}
 
-	items := gjson.Get(json, "items.#.html_url").Array()
-	fmt.Printf("[INF] Total found: %d\n", len(items))
-	for _, value := range items {
-		url := value.String()
-		lastSlashIndex := strings.LastIndex(url, "/")
-		nameOfFile := url[lastSlashIndex+1:]
-		fmt.Printf("[%s] %s\n", nameOfFile, url)
+		for page := 1; page <= lastPage; page++ {
+			url := fmt.Sprintf("https://api.github.com/search/code?q=%s&sort=%s&page=%d", searchTerm, sortBy, page)
+			response, err := sendRequest(url, headers)
+
+			if err != nil {
+				fmt.Printf("Erro na solicitação HTTP para a página %d: %v\n", page, err)
+				continue
+			}
+
+			data, err := ioutil.ReadAll(response.Body)
+			if err != nil {
+				fmt.Println("[WRN] An error occurred while reading the response!")
+				return
+			}
+
+			json := string(data[:])
+
+			items := gjson.Get(json, "items.#.html_url").Array()
+			for _, value := range items {
+				url := value.String()
+				lastSlashIndex := strings.LastIndex(url, "/")
+				nameOfFile := url[lastSlashIndex+1:]
+				fmt.Printf("[%s] %s\n", nameOfFile, url)
+			}
+			time.Sleep(700 * time.Millisecond)
+
+		}
+
 	}
 }
 
