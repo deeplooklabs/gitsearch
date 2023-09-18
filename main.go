@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -30,22 +31,44 @@ var (
         %s
 `, version, site)
 
-	example = "gitsearch \"tesla.com boto language:python\""
+	example        = "gitsearch -q \"tesla.com boto language:python\""
+	query          string
+	token          string
+	files          bool
+	repositorys    bool
+	dontShowBanner bool
 )
 
 func main() {
-	if len(os.Args) < 2 {
+
+	flag.StringVar(&query, "q", "", "Query to search on Github")
+	flag.StringVar(&token, "t", "", "Token of Github API or use on env ex: GITHUB_TOKEN")
+	flag.BoolVar(&files, "f", true, "Show files urls")
+	flag.BoolVar(&repositorys, "r", false, "Show repository urls")
+	flag.BoolVar(&dontShowBanner, "silent", false, "Dont show banner")
+
+	flag.Parse()
+
+	if query == "" {
 		fmt.Println(banner)
 		fmt.Println(example)
 		return
 	}
 
-	fmt.Println(banner)
+	if dontShowBanner == true {
 
-	searchTerm := url.QueryEscape(os.Args[1])
-	accessToken := os.Getenv("GITHUB_TOKEN")
+	} else {
+		fmt.Println(banner)
+	}
+
+	searchTerm := url.QueryEscape(query)
+
+	if token == "" {
+		token = os.Getenv("GITHUB_TOKEN")
+	}
+
 	sortBy := "updated"
-	headers := map[string]string{"Authorization": "Token " + accessToken}
+	headers := map[string]string{"Authorization": "Token " + token}
 	url := fmt.Sprintf("https://api.github.com/search/code?q=%s&sort=%s", searchTerm, sortBy)
 	response, err := sendRequest(url, headers)
 	if err != nil {
@@ -90,13 +113,24 @@ func main() {
 
 			json := string(data[:])
 
-			items := gjson.Get(json, "items.#.html_url").Array()
-			for _, value := range items {
-				url := value.String()
-				lastSlashIndex := strings.LastIndex(url, "/")
-				nameOfFile := url[lastSlashIndex+1:]
-				fmt.Printf("[%s] %s\n", nameOfFile, url)
+			if files {
+				items := gjson.Get(json, "items.#.html_url").Array()
+				for _, value := range items {
+					url := value.String()
+					lastSlashIndex := strings.LastIndex(url, "/")
+					nameOfFile := url[lastSlashIndex+1:]
+					fmt.Printf("[%s] %s\n", nameOfFile, url)
+				}
 			}
+
+			if repositorys {
+				items := gjson.Get(json, "items.#.repository.html_url").Array()
+				for _, value := range items {
+					url := value.String()
+					fmt.Printf("%s\n", url)
+				}
+			}
+
 			time.Sleep(700 * time.Millisecond)
 
 		}

@@ -14,19 +14,26 @@ cd gitsearch; go install
 
 ## Config:
 
+### With enviroment:
 Set enviroment GITHUB_TOKEN
 
 ```bash
-export GITHUB_TOKEN=XXX; gitsearch SEARCH
+export GITHUB_TOKEN=XXX; gitsearch -q SEARCH
+```
+
+### With parameter
+```bash
+gitsearch -q SEARCH -t TOKEN
 ```
 
 ## How to search:
 
 > Search AWS keys on source python:
 ```bash
-gitsearch "\"target\" \"AKIA\" boto language:python"
+gitsearch -q "\"target\" \"AKIA\" boto language:python"
 ```
 
-## Todo:
-
-- [x] Get 30+ Results 
+> Show only repository url:
+```bash
+gitsearch -q "\"target\" \"AKIA\" boto language:python" -r -silent | sort -u
+```
