@@ -7,8 +7,7 @@ Searching github the way it worked...
 ## Install
 
 ```bash
-git clone https://github.com/deeplooklabs/gitsearch.git
-cd gitsearch; go install
+go install github.com/deeplooklabs/gitsearch@latest
 
 ```
 
