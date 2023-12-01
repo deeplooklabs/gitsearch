@@ -43,8 +43,8 @@ func main() {
 
 	flag.StringVar(&query, "q", "", "Query to search on Github")
 	flag.StringVar(&token, "t", "", "Token of Github API or use on env ex: GITHUB_TOKEN")
-	flag.BoolVar(&files, "f", true, "Show files urls")
-	flag.BoolVar(&repositorys, "r", false, "Show repository urls")
+	flag.BoolVar(&files, "f", false, "Show files urls")
+	flag.BoolVar(&repositorys, "r", true, "Show repository urls")
 	flag.BoolVar(&dontShowBanner, "silent", false, "Dont show banner")
 
 	flag.Parse()
@@ -59,6 +59,12 @@ func main() {
 
 	} else {
 		fmt.Println(banner)
+	}
+
+	if files {
+		repositorys = false
+	} else {
+		repositorys = true
 	}
 
 	searchTerm := url.QueryEscape(query)
@@ -89,7 +95,9 @@ func main() {
 	if len(matches) == 2 {
 		lastPageStr := matches[1]
 		lastPage, err := strconv.Atoi(lastPageStr)
-		fmt.Printf("[INF] Total pages found: %d\n", lastPage)
+		if dontShowBanner != true {
+			fmt.Printf("[INF] Total pages found: %d\n", lastPage)
+		}
 
 		if err != nil {
 			fmt.Println("Error during conversion")
